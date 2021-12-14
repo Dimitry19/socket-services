@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+   <meta charset = "utf-8" />
+   <title>WebSocket Test</title>
+   <script src="stomp.min.js"></script>
+   <script src="sockjs.min.js"></script>
+    <script language = "javascript" type = "text/javascript">
+      //var wsUri = "ws://localhost:8080/socket-test/stomp";
+      var socket  =  new SockJS('/socket-test/stomp');
+      var output;
+		
+      function init() {
+         output = document.getElementById("output");
+         testWebSocket();
+      }
+		
+      function testWebSocket() {
+         
+		 
+		 //var client =Stomp.client(socket );  
+		 var client =Stomp.over(socket );
+		 var header={name: 'test'};
+		 client.connect({}, function (frame) {
+                //setConnected(true);
+                console.log('Connected: ' + frame);
+                client.subscribe('/user/lion/notification/prova', onmessage);
+            });
+
+      }
+	 onmessage = function(message) {
+    // called every time the client receives a message
+	//console.log( greeting.body);
+	 writeToScreen(message.body);
+	 };
+      function writeToScreen(message) {
+         var pre = document.createElement("p"); 
+         pre.style.wordWrap = "break-word"; 
+         pre.innerHTML = message; output.appendChild(pre);
+      }
+		
+      window.addEventListener("load", init, false);
+		
+   </script>
+	
+   <h2>WebSocket Test</h2>
+   <div id = "output"></div> 
+	
+</html>
