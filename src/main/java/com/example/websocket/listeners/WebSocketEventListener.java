@@ -24,7 +24,7 @@ public class WebSocketEventListener {
 		StompHeaderAccessor stompAccessor = StompHeaderAccessor.wrap(event.getMessage());
 
 		String sessionId = stompAccessor.getSessionId();
-		sessionIds.clear();
+		//sessionIds.clear();
 		sessionIds.add(sessionId);
 
 		@SuppressWarnings("rawtypes")
@@ -45,6 +45,7 @@ public class WebSocketEventListener {
 	public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
 		StompHeaderAccessor stompAccessor = StompHeaderAccessor.wrap(event.getMessage());
 		String sessionId = stompAccessor.getSessionId();
+		sessionIds.remove(sessionId);
 
 	}
 

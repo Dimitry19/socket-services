@@ -43,11 +43,14 @@ public class WebSocketApplication implements CommandLineRunner{
 					progress.put("num1", randomWithRange(0, 100));
 					progress.put("num2", randomWithRange(0, 100));
 
-					SimpMessageHeaderAccessor accessor = SimpMessageHeaderAccessor.create();
+
+
 
 					listener.getSessionIds().forEach(s->{
+						SimpMessageHeaderAccessor accessor = SimpMessageHeaderAccessor.create();
 						accessor.setHeader(SimpMessageHeaderAccessor.SESSION_ID_HEADER, s);
-						messagingTemplate.convertAndSendToUser(s,"/user/lion/notification/prova", "test"+randomWithRange(0, 100),accessor.getMessageHeaders());
+						accessor.setLeaveMutable(true);
+						messagingTemplate.convertAndSendToUser(s,"/notification/item", "test"+randomWithRange(0, 100) + "sessionId=" + s,accessor.getMessageHeaders());
 					});
 
 				} catch (Exception e) {
