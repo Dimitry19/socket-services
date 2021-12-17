@@ -15,7 +15,7 @@ import java.util.Map;
 
 /*https://stackoverflow.com/questions/45357194/simple-convertandsendtouser-where-do-i-get-a-username*/
 
-@SpringBootApplication
+//@SpringBootApplication
 public class WebSocketApplication implements CommandLineRunner{
 	private Map<String, Integer> progress = new HashMap<>();
 
@@ -74,6 +74,6 @@ public class WebSocketApplication implements CommandLineRunner{
 
 	@Override
 	public void run(String... args) throws Exception {
-		websocketDemo();
+		//websocketDemo();
 	}
 }

@@ -1,8 +1,9 @@
-package com.example.websocket.config;
+package com.example.config;
 
 import com.example.websocket.constants.Constants;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -24,10 +25,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
             .csrf().disable()
             .authorizeRequests()
-                .antMatchers(Constants.path).permitAll()
+                .antMatchers("/").permitAll()
                 .anyRequest()
-                    .authenticated();
+                    .authenticated().and().httpBasic();
         // @formatter:on
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.inMemoryAuthentication()
+                .withUser("user")
+                .password("{noop}pass") // Spring Security 5 requires specifying the password storage format
+                .roles("USER");
     }
 
     /**
