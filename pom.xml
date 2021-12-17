@@ -10,9 +10,9 @@
 	</parent>
 	<groupId>com.example</groupId>
 	<artifactId>websocket</artifactId>
-	<version>0.0.1</version>
-	<name>websocket</name>
-	<description>Demo project for websocket under Spring Boot</description>
+	<version>0.0.2 - SNAPSHOT</version>
+	<name>Chat app</name>
+	<description>Demo chat app under Spring Boot</description>
 
 	<properties>
 		<java.version>11</java.version>
