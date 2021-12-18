@@ -1,23 +1,46 @@
 package com.example.config;
 
-import com.example.websocket.constants.Constants;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import static com.example.constants.Constants.*;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
+        //declares which Page(URL) will have What access type
+        http.authorizeRequests()
+                .antMatchers(home_path).permitAll()
+                .antMatchers(welcome_path).authenticated()
+                .antMatchers(admin_path).hasAnyAuthority("ADMIN")
+                .antMatchers(user_path).hasAnyAuthority("USER")
+                .antMatchers(manager_path).hasAnyAuthority("MANAGER")
+                .antMatchers(common_path).hasAnyAuthority("USER","MANAGER")
+            // Any other URLs which are not configured in above antMatchers generally declared aunthenticated() in real time
+                .anyRequest().authenticated()
+                //Login form details
+                .and().formLogin().defaultSuccessUrl(welcome_path,true)
+                //Logout form details
+                .and().logout().logoutRequestMatcher( new AntPathRequestMatcher(logout_path))
+                //Exception Details
+                .and()
+                .exceptionHandling()
+                .accessDeniedPage(denied_path);
+
+
         // @formatter:off
-        http
+      /*  http
             .cors()
                 .and()
             .headers()
@@ -27,16 +50,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
                 .antMatchers("/").permitAll()
                 .anyRequest()
-                    .authenticated().and().httpBasic();
+                    .authenticated().and().httpBasic();*/
         // @formatter:on
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
+        // {noop} => No operation for password encoder	(no password encoding needed)
+        auth.inMemoryAuthentication().withUser("devs").password("{noop}devs").authorities("ADMIN");
+        auth.inMemoryAuthentication().withUser("ns").password("{noop}ns").authorities("USER");
+        auth.inMemoryAuthentication().withUser("vs").password("{noop}vs").authorities("MANAGER");
+
+        /*auth.inMemoryAuthentication()
                 .withUser("user")
                 .password("{noop}pass") // Spring Security 5 requires specifying the password storage format
-                .roles("USER");
+                .roles("USER");*/
     }
 
     /**

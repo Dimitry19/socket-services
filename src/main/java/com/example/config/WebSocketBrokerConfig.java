@@ -1,6 +1,6 @@
 package com.example.config;
 
-import com.example.websocket.constants.Constants;
+import com.example.constants.Constants;
 import com.example.websocket.filter.CrossDomainFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
