@@ -12,6 +12,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import static com.example.constants.Constants.*;
+//https://www.invivoo.com/securiser-application-spring-boot-spring-security/ TODO
 
 @Configuration
 @EnableWebSecurity
