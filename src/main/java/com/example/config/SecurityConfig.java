@@ -19,8 +19,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
+
         //declares which Page(URL) will have What access type
         http.authorizeRequests()
+                .antMatchers(h2_path).permitAll()
                 .antMatchers(home_path).permitAll()
                 .antMatchers(welcome_path).authenticated()
                 .antMatchers(admin_path).hasAnyAuthority("ADMIN")

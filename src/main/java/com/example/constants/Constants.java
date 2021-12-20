@@ -13,5 +13,7 @@ public class Constants {
 	public static final String denied_path="/denied";
 	public static final String logout_path="/logout";
 
+	public static final String h2_path="/h2";
+
 
 }
