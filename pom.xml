@@ -11,6 +11,7 @@
 	<groupId>ds.bangouboy</groupId>
 	<artifactId>kongossa</artifactId>
 	<version>0.0.2 - SNAPSHOT</version>
+	<packaging>war</packaging>
 	<name>Chat app</name>
 	<description>Demo chat app under Spring Boot</description>
 
