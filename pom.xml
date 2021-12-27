@@ -12,6 +12,9 @@
 	<artifactId>kongossa</artifactId>
 	<version>0.0.2 - SNAPSHOT</version>
 	<packaging>jar</packaging>
+	<build>
+		<finalName>kgs</finalName>
+	</build>
 	<name>Chat app</name>
 	<description>Demo chat app under Spring Boot</description>
 
