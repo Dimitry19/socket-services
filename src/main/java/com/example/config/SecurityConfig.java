@@ -1,15 +1,19 @@
 package com.example.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import javax.sql.DataSource;
 
 import static com.example.constants.Constants.*;
 //https://www.invivoo.com/securiser-application-spring-boot-spring-security/ TODO
@@ -17,10 +21,16 @@ import static com.example.constants.Constants.*;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+
+    @Autowired
+    private DataSource dataSource;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
-
         //declares which Page(URL) will have What access type
         http.authorizeRequests()
                 .antMatchers(h2_path).permitAll()
@@ -30,7 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(user_path).hasAnyAuthority("USER")
                 .antMatchers(manager_path).hasAnyAuthority("MANAGER")
                 .antMatchers(common_path).hasAnyAuthority("USER","MANAGER")
-            // Any other URLs which are not configured in above antMatchers generally declared aunthenticated() in real time
+                 // Any other URLs which are not configured in above antMatchers generally declared aunthenticated() in real time
                 .anyRequest().authenticated()
                 //Login form details
                 .and().formLogin().defaultSuccessUrl(welcome_path,true)
@@ -40,34 +50,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .exceptionHandling()
                 .accessDeniedPage(denied_path);
-
-
-        // @formatter:off
-      /*  http
-            .cors()
-                .and()
-            .headers()
-                .frameOptions().disable()
-                .and()
-            .csrf().disable()
-            .authorizeRequests()
-                .antMatchers("/").permitAll()
-                .anyRequest()
-                    .authenticated().and().httpBasic();*/
-        // @formatter:on
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        // {noop} => No operation for password encoder	(no password encoding needed)
-        auth.inMemoryAuthentication().withUser("devs").password("{noop}devs").authorities("ADMIN");
-        auth.inMemoryAuthentication().withUser("ns").password("{noop}ns").authorities("USER");
-        auth.inMemoryAuthentication().withUser("vs").password("{noop}vs").authorities("MANAGER");
 
-        /*auth.inMemoryAuthentication()
-                .withUser("user")
-                .password("{noop}pass") // Spring Security 5 requires specifying the password storage format
-                .roles("USER");*/
+        auth.jdbcAuthentication()
+                .dataSource(dataSource)     //creates database connection
+                .usersByUsernameQuery("select user_name,password,user_enabled from user where user_name=?")
+                .authoritiesByUsernameQuery("select user_name,user_role from user where user_name=?")
+                .passwordEncoder(passwordEncoder);
     }
 
     /**
