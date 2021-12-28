@@ -13,8 +13,8 @@
 	<version>0.0.2 - SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>Chat app</name>
-	<description>Demo chat app under Spring Boot</description>
+	<name>Base app</name>
+	<description>Base app under Spring Boot+ Spring boot security</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
